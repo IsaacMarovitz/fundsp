@@ -335,11 +335,13 @@ impl AtomicTable {
         let i1 = unsafe { f32::to_int_unchecked::<usize>(p) };
         let w = p - i1 as f32;
         let mask = self.table.len() - 1;
-        let i0 = i1.wrapping_sub(1) & mask;
-        let i1 = i1 & mask;
-        let i2 = (i1 + 1) & mask;
-        let i3 = (i1 + 2) & mask;
-        super::math::spline(self.at(i0), self.at(i1), self.at(i2), self.at(i3), w)
+        let i0 = i1 & mask;
+        let i1 = (i1 + 1) & mask;
+        if w > 0.5 {
+            i1 as f32
+        } else {
+            i0 as f32
+        }
     }
 }
 
